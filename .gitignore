@@ -1,0 +1,33 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+tts_venv/
+
+# media and generated outputs
+*.mp4
+*.mp3
+*.wav
+*.m4a
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.srt
+*.ass
+out/
+work/
+music/
+models/
+
+# episode / production folders and their state
+scripts/v[0-9]*/
+scripts/c[0-9]*/
+scripts/ro/
+dashboard/stats.sqlite
+dashboard/thumbs/
+dashboard/alerts.log
+dashboard/monetization.json
+dashboard/meta-connection.json
+flow_prompts/prompts_*.json

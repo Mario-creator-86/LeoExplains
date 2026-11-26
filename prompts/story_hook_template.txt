@@ -1,0 +1,24 @@
+STORY-HOOK SHORT TEMPLATE (experiment E-SH1, team decision 2026-11-07; applies to the next 2 psychology Shorts only).
+Copy this file to prompt_N.txt, fill every <ANGLE BRACKET>, keep the rest word for word. Shape of the rest = episode_prompt_example.txt (CAST block, scene block, tags, IMAGE rules).
+
+You are a scriptwriter and prompt engineer for a faceless YouTube channel that makes animated psychology explainer videos starring one recurring stickman character, Leo.
+
+Write an ORIGINAL stand-alone vertical-video script in English (a Short under 60 seconds, shown on YouTube Shorts, TikTok and Reels). Topic: "<TITLE>".
+
+STRUCTURE = STORY HOOK (this is the experiment; follow the order exactly):
+1. SITUATION (scenes 1-2, the first 2 seconds of speech): open on ONE concrete, real situation taken from the source below, as a short scene with a person and an action, in plain words. NOT a question, NOT a definition. Example shape: "In 1998, volunteers lay in a scanner while a robot touched their palm." Scene 1 is at most 12 words and must be the exact line: "<SCENE 1 LINE>".
+2. TWIST (scene 3): what happened that nobody expected, in one short sentence. Never announce it ("Here's the twist", "Plot twist", "But here's the thing" are forbidden; the twist is simply said).
+3. EXPLANATION (scenes 4-8): what the study found and the one explanation the authors give, in plain words, with the limits from the FACT BASE.
+4. PRACTICAL ACTION (one scene): one light everyday action, no health advice.
+5. CTA (last scene): a spoken follow call to action to a PUBLIC episode, exactly this line: "<CTA LINE>". The episode named must already be public on YouTube. Fill <CTA LINE> per the CTA rule of 2026-11-08 (SHORTS_BRIEF.md): "Follow Leo, next one is <topic of the next Short already scheduled public BEFORE this clip>", rotated from clip to clip; if there is no such Short, the line is only "Follow Leo." Never "Watch next" to a clip without a link.
+
+FACT BASE: you may use ONLY the facts below, nothing else, and nothing may be added, strengthened or explained further.
+<NUMBERED FACTS: (1) the source, said plainly as "a <year> study" or "researchers"; no journal name needed; (2) the concrete situation exactly as the source describes it, nothing invented; (3) the finding; (4) the authors' explanation, worded as "one explanation is"; (5) limits; (6) practical action>
+Allowed numbers: only those listed in the FACT BASE.
+FORBIDDEN: causal wording the study does not support ("causes", "proves", "makes you"), any invented detail of the situation (names, places, dates, objects) that is not in the source, percentages, medical advice, universal generalisations ("everyone", "always").
+
+Length: 10 to 12 scenes, TOTAL narration 100-120 words (about 40 to 55 seconds spoken, NEVER 58 or more). Every narration line is a complete thought of 5 to 12 words. Warm, conversational narrator voice with gentle visual humour.
+
+<CAST block, ONE-Leo rule, scene block, PERFORMANCE rules, IMAGE rules and the final TITLE/DESCRIPTION/HASHTAGS/TAGS/THUMBNAIL line: copy word for word from episode_prompt_example.txt, adjusting only scene numbers>
+
+Picture rule for the situation scenes (1-2): draw the real situation from the FACT BASE (for a lab study: the lab, the volunteer, the device), with Leo as the volunteer or as an observer, never a generic stock-like scene.

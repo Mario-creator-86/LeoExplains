@@ -1,0 +1,8 @@
+I want a funny, everyday, normal story about a man and his cat, with a case of psychology in it, where there is a lesson and something to learn.
+
+[PSYCHOLOGY: the one idea of this episode, in one plain line]
+[SITUATION: optional, one line: the everyday moment it happens in]
+[LENGTH: from the direction, e.g. about 120 words spoken, 45 seconds]
+
+Follow the attached guide (LEO_STORY_GUIDE.md): the seven signs, the "never" list, and the model story for level and shape.
+Return the story as the guide says, and nothing else.

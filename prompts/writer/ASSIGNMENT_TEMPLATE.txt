@@ -1,0 +1,41 @@
+Follow the attached LEO_WRITER_SKILL.md: it says who you are, what you must do, the three questions the episode must pass and what you must write. This file is the assignment for ONE episode.
+
+THE EPISODE
+- A stand-alone vertical video in English for YouTube Shorts, TikTok and Reels.
+- Length: [seconds, from the direction] seconds. Scenes: [count, from the direction]. Spoken words in total over the NARRATION lines: [the range that fits this length at the episode's voice speed].
+- Subject: [the subject, in plain words].
+- The finding behind it. It is felt in the story and never taught. Say it only as it is described here, with no numbers, no authors and no «studies show»: [the "study" text of the topics.json entry, with its limits].
+- TITLE (exact): "[title] #Shorts"
+
+THE DIRECTION OF THE CHANNEL (these are rules, in the direction's own words)
+[The lines of the direction that say how an episode is written: who narrates, how the finding appears, whether there is a practical action, what the last line does, what is never said. Nothing of your own. If the direction is silent on a point, leave the point out: the skill covers it.]
+
+THE PEOPLE AND PLACES THAT RETURN IN THE SERIES (use them when the story has them; invent the others the story needs)
+leo | Leo | Leo, a simple stickman with a big round white head, black outline, simple expressive eyes and mouth, a yellow baseball cap worn backwards with a small tuft of brown hair, thin black line body and limbs, round black hands and black oval feet
+[Every other character, object or place that the direction or the request names as returning, one per line as `id | name | look`. Nothing here if there is none.]
+
+WHAT THE CHANNEL AGENT ASKS, WORD FOR WORD (her proposal: keep what helps the three questions and replace what does not; her subject, the finding and the rules above stay)
+[The request of this run, complete and unchanged. If there is none: (nothing for this episode)]
+
+OUTPUT FORMAT (technical; follow it exactly)
+
+At the very top give: TITLE (exactly as above), DESCRIPTION (2 short engaging sentences in the second person, ending with the words "Made with AI.", no call to action), HASHTAGS (10, none naming the channel or a mascot), TAGS (20 comma-separated) and THUMBNAIL (an image prompt of the strongest moment of the episode, with the CAST looks, plus 2-4 words of thumbnail text). No other commentary.
+
+Before SCENE 1, write a block that starts with the line CAST: and lists every character, every important object and every place of the episode, one per line as `id | name | look | scenes`. Leo's look is exactly the one above. A person you invent is a capless stickman with a big round white head, with the hair shape and colour, ONE clothing item with its colour, thin black line limbs, round black hands and black oval feet, and how tall the person stands beside Leo. An object has its colour, material and shape. A place has ONE rich look (see THE LOOK below). In every IMAGE line where that character, object or place appears, repeat its look WORD FOR WORD and never change it between scenes.
+
+For EVERY scene output exactly this block and nothing else:
+SCENE N
+NARRATION: (the voiceover line for this scene)
+IMAGE: (a detailed text-to-image prompt)
+MOTION: (one short camera/character motion idea, with visible movement)
+PERFORMANCE: (the SAME narration line, word for word, with nothing added)
+
+Rules for every IMAGE prompt:
+- The first sentence says what happens in the picture: who does what, with what, and what is visibly wrong. Then the view (which side of the place is seen, how close, what is in front and what is behind), then the set.
+- Each IMAGE includes the sentence "Medium-close, vertical 9:16, the character fills about half the frame." (in a wide view the characters are still large in the lower half of the frame).
+- ONE Leo per picture. Leo wears his yellow backwards cap in every picture he is in. He stands about three and a half heads tall on long thin legs; when he faces us the brim of his cap sticks out behind his head toward the left of the picture and the brown tuft shows at the opening of the cap above his forehead (say this once in each IMAGE that has Leo). A picture in which Leo does not appear does not mention him. Every person has exactly two arms and two legs, a clear pose, an action and a facial expression. When two people share a picture, say how tall each stands beside the other.
+- THE LOOK OF EVERY PICTURE (fixed rule of the channel owner). Every IMAGE names, in its own words: (1) the place, lived in and furnished from the floor to the top edge of the frame, in strong named colours (teal, sunny yellow, deep blue, sage green, terracotta, plum, dark wood), with depth: something in the foreground, the character in the middle, a window, a doorway or shelves behind, and a wooden, tiled or patterned floor; (2) at least one light that is on and can be seen, or strong sun through a window with its rays on the floor, and a clear time of day, warm light against cooler shadows; (3) at least eight small named details that show life and fit the story (plants, books, mugs, jars, framed pictures, a rug, curtains, cushions, coats, shoes, dishes); (4) its own frame: a place keeps its furniture and colours, but every scene shows it from another side or distance; (5) bold dark outlines, saturated colours, soft painted shading.
+- Say what is in the picture: describe every thing as it is and leave out whatever is absent. Whatever is written in the story's world (a note, a screen, a score, a clock) shows only coloured shapes, marks and scribble lines, so the story does not depend on reading words in a picture: count with tally marks, magnets or objects.
+- Keep each IMAGE short enough to be followed: Leo's description once, each other character once, the place once. A sentence is not said twice.
+- Every IMAGE contains this sentence right before the final style sentence: "Vertical 9:16 frame filled from the floor to the top edge with furniture and details, the characters clearly visible and large."
+- Every IMAGE ends with: "Detailed 2D cartoon explainer illustration, vibrant colors, clean bold outlines, soft lighting, cinematic composition, vertical 9:16, no text". The frame is always vertical 9:16.

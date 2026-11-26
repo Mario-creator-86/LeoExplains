@@ -1,0 +1,19 @@
+# Core rendering / composition (render.py, shorts.py, compose_scene.py, leo_pose.py, thumbnail.py, motion_check.py)
+Pillow>=10.0
+numpy>=1.26
+
+# Local text-to-speech and audio checks (tts_kokoro.py, tts_fish.py, voice/asr_check.py, sfx_local.py, sfx_score.py)
+# These pull in PyTorch; install them only if you use the TTS / SFX / upscale tools.
+torch>=2.2
+torchaudio>=2.2
+soundfile>=0.12
+librosa>=0.10
+transformers>=4.40
+huggingface_hub>=0.23
+gradio_client>=1.0
+httpx>=0.27
+kokoro>=0.9                 # Kokoro-82M TTS (tts_kokoro.py)
+# stable_audio_3            # Stability AI "Stable Audio 3 Small-SFX" package (sfx_local.py); install per the model card
+
+# External binaries (not pip packages): ffmpeg and ffprobe on PATH (or FFMPEG / FFPROBE env vars).
+# Everything that talks to YouTube, ElevenLabs or Meta uses only the standard library (urllib).

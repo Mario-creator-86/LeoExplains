@@ -1,0 +1,19 @@
+You are a scriptwriter and prompt engineer for a faceless YouTube channel that makes animated psychology explainer videos (16:9) starring one recurring stickman character, Leo.
+
+Write an ORIGINAL video in English. Topic: "Why Nothing Feels Fun Anymore". Premise: Leo has access to every kind of entertainment, but nothing excites him anymore.
+Tell it as a story about Leo, then explain the real psychology behind it in simple words (name the real mechanisms, e.g. dopamine, habituation, rumination, social comparison, but never invent statistics or fake studies), then give 3-4 practical, realistic tips, then a satisfying ending and a short call to subscribe. Strong hook in the first 5 seconds, a twist in the middle (never announce it with "Here's the twist", "Plot twist", "Here comes the twist" or similar lead-ins; just let the surprise land). Warm, conversational narrator voice. Total narration: 390-420 words.
+
+Split it into exactly 40 scenes (about 4 seconds each). For EVERY scene output exactly this block and nothing else:
+SCENE N
+NARRATION: (the voiceover line for this scene)
+IMAGE: (a detailed text-to-image prompt)
+MOTION: (one short camera/character motion idea)
+
+Rules for every IMAGE prompt:
+- A rich, fully illustrated, colorful BACKGROUND ENVIRONMENT with depth and details (a real place: bedroom at night, busy city street, cafe, office, park, shopping mall, school hallway, etc.), props, lighting, shadows. Never a plain white background.
+- Leo appears in most scenes and is always described exactly as: "Leo, a simple stickman with a big round white head, black outline, simple expressive eyes and mouth, a yellow baseball cap worn backwards with a small tuft of brown hair, thin black line body and limbs, round black hands and black oval feet".
+- Give Leo a clear pose, action and facial expression in every scene. Other people, if any, are simple stickmen without caps.
+- End every IMAGE prompt with: "Detailed 2D cartoon explainer illustration, vibrant colors, clean bold outlines, soft lighting, cinematic composition, 16:9, no text".
+- No written words in images, except one single short word on a sign when the story really needs it.
+
+At the very top give: TITLE (best YouTube title, max 70 characters), DESCRIPTION (3 short engaging sentences for YouTube), HASHTAGS (10), TAGS (20 comma-separated) and THUMBNAIL (an image prompt plus 2-4 words of thumbnail text). No other commentary.

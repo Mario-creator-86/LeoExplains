@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leo Explains Progress</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f3f3f1;
+  --surface-1: #ffffff;
+  --surface-2: #f5f5f2;
+  --zebra: #fafaf8;
+  --border: #e4e3de;
+  --text-primary: #111110;
+  --text-secondary: #4f4e4a;
+  --text-muted: #7a7972;
+  --accent: #2a78d6;
+  --accent-ink: #ffffff;
+  --grid: #ecebe7;
+  --good: #1a7f37;
+  --bad: #c62828;
+  --warn: #9a6700;
+  /* platform identity */
+  --yt: #e62117;
+  --tt: #111111;
+  --tt-line: #12a5a8;
+  --fb: #1877f2;
+  --ig: #d6249f;
+  --ig-grad: linear-gradient(90deg, #f58529, #dd2a7b 50%, #8134af);
+  --pin: #e60023;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 1px 8px rgba(0,0,0,.03);
+  --topbar: rgba(243,243,241,.88);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #111110; --surface-1: #1a1a19; --surface-2: #222220; --zebra: #1e1e1d; --border: #2f2f2c;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #9a998f;
+    --accent: #3987e5; --grid: #2a2a27; --good: #4cc26b; --bad: #f07070; --warn: #e0b04a;
+    --yt: #ff4e45; --tt: #f0efec; --tt-line: #2cc5c8; --fb: #4a90f5; --ig: #ef5bb3; --pin: #ff4d5e;
+    --shadow: none; --topbar: rgba(17,17,16,.88);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111110; --surface-1: #1a1a19; --surface-2: #222220; --zebra: #1e1e1d; --border: #2f2f2c;
+  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #9a998f;
+  --accent: #3987e5; --grid: #2a2a27; --good: #4cc26b; --bad: #f07070; --warn: #e0b04a;
+  --yt: #ff4e45; --tt: #f0efec; --tt-line: #2cc5c8; --fb: #4a90f5; --ig: #ef5bb3; --pin: #ff4d5e;
+  --shadow: none; --topbar: rgba(17,17,16,.88);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--text-primary);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.num, .big, .val { font-variant-numeric: tabular-nums; }
+.muted { color: var(--text-muted); }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px 56px; }
+
+/* ---------- sticky top bar */
+.topbar {
+  position: sticky; top: 0; z-index: 20; background: var(--topbar);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px); backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar .inner { max-width: 1160px; margin: 0 auto; padding: 10px 16px; display: flex; gap: 12px; align-items: center; }
+.brand { display: flex; gap: 10px; align-items: center; min-width: 0; flex: 1; }
+.brand img { width: 36px; height: 36px; border-radius: 50%; background: var(--surface-2); flex: none; }
+.brand h1 { font-size: 17px; margin: 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand .sub { color: var(--text-muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.updated { font-size: 12.5px; color: var(--text-secondary); text-align: right; line-height: 1.35; }
+.updated b { color: var(--text-primary); font-weight: 600; }
+button.primary {
+  background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 8px;
+  padding: 8px 14px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+button.primary:disabled { opacity: .55; cursor: default; }
+
+/* ---------- status chips */
+.status { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-secondary);
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px 3px 8px;
+  max-width: 100%;
+}
+.chip .msg { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.chip.ok .dot { background: var(--good); }
+.chip.info .dot { background: var(--warn); }
+.chip.err .dot { background: var(--bad); }
+
+/* ---------- sections */
+section { margin-top: 30px; }
+.sec-head { margin: 0 0 12px; }
+.sec-head h2 { font-size: 18px; margin: 0; }
+.sec-head p { margin: 2px 0 0; color: var(--text-muted); font-size: 13.5px; }
+.card {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px; box-shadow: var(--shadow); min-width: 0; position: relative; overflow: hidden;
+}
+.empty { color: var(--text-muted); font-size: 14px; }
+.note { font-size: 12.5px; color: var(--text-muted); margin: 10px 0 0; }
+
+/* ---------- totals strip */
+.totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.total { padding: 14px 18px; }
+.total .lbl { font-size: 12.5px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.total .big { font-size: 30px; font-weight: 700; line-height: 1.15; margin-top: 2px; }
+.total .chg { font-size: 13px; margin-top: 2px; }
+
+/* ---------- platform cards */
+.platforms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.pcard { display: flex; flex-direction: column; padding-top: 20px; }
+.pcard::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--pc); }
+.pcard.yt { --pc: var(--yt); } .pcard.tt { --pc: linear-gradient(90deg, var(--tt) 60%, var(--tt-line)); }
+.pcard.fb { --pc: var(--fb); } .pcard.ig { --pc: var(--ig-grad); } .pcard.pin { --pc: var(--pin); }
+.phead { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.phead .pname { font-weight: 700; font-size: 15px; }
+.phead .acct { font-size: 13px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.phead img { width: 30px; height: 30px; border-radius: 50%; margin-left: auto; background: var(--surface-2); flex: none; }
+.ico { width: 22px; height: 22px; flex: none; }
+.ico.yt { color: var(--yt); } .ico.tt { color: var(--tt); } .ico.fb { color: var(--fb); } .ico.ig { color: var(--ig); } .ico.pin { color: var(--pin); }
+.headline { margin: 14px 0 2px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.headline .big { font-size: 40px; font-weight: 750; line-height: 1; }
+.headline .lbl { color: var(--text-secondary); font-size: 14px; }
+.chgline { font-size: 13px; color: var(--text-muted); }
+.up { color: var(--good); font-weight: 600; } .down { color: var(--bad); font-weight: 600; }
+.stats3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
+.stat { background: var(--surface-2); border-radius: 10px; padding: 9px 11px; min-width: 0; }
+.stat .lbl { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stat .val { font-size: 20px; font-weight: 650; line-height: 1.25; }
+.stat .chg { font-size: 12px; color: var(--text-muted); }
+.pfoot { margin-top: auto; padding-top: 12px; font-size: 12.5px; color: var(--text-muted); }
+.pempty { margin: 14px 0 0; padding: 14px; background: var(--surface-2); border-radius: 10px; font-size: 13.5px; color: var(--text-secondary); }
+
+/* ---------- monetization */
+.pcard.yt { --bar: var(--yt); } .pcard.tt { --bar: var(--tt-line); } .pcard.fb { --bar: var(--fb); } .pcard.ig { --bar: var(--ig); } .pcard.pin { --bar: var(--pin); }
+.mon { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 12px; }
+.mon-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.mon-head .t { font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-secondary); }
+.mon-head .next { font-size: 12.5px; color: var(--text-secondary); }
+.mon-head .next b { color: var(--text-primary); }
+.prog { margin-top: 8px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-1); }
+.prog > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 8px 10px; font-size: 13.5px; }
+.prog > summary::-webkit-details-marker { display: none; }
+.prog > summary::before { content: "▸"; color: var(--text-muted); font-size: 11px; transition: transform .15s; }
+.prog[open] > summary::before { transform: rotate(90deg); }
+.prog .pn { font-weight: 650; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pill { margin-left: auto; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap;
+        background: var(--surface-2); color: var(--text-secondary); border: 1px solid var(--border); }
+.pill.eligible { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, transparent); }
+.pill.thresholds { background: color-mix(in srgb, var(--warn) 16%, transparent); color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, transparent); }
+.pill.blocked { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 35%, transparent); }
+.reqs { padding: 2px 10px 10px; }
+.req { padding: 6px 0 2px; }
+.req .top { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; }
+.req .top .l { color: var(--text-secondary); min-width: 0; }
+.req .top .v { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text-primary); font-weight: 600; }
+.req .top .v.ok { color: var(--good); }
+.bar { height: 6px; border-radius: 999px; background: var(--surface-2); margin-top: 4px; overflow: hidden; border: 1px solid var(--border); }
+.bar > i { display: block; height: 100%; border-radius: 999px; background: var(--bar); min-width: 3px; }
+.bar.ok > i { background: var(--good); }
+.req .sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+.or { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin: 4px 0 0; }
+.anyof { border-left: 2px solid var(--border); padding-left: 8px; margin-top: 4px; }
+.manual { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; padding: 6px 0 0; }
+.manual .l { color: var(--text-secondary); }
+.manual .s { white-space: nowrap; font-weight: 650; }
+.manual .s.yes { color: var(--good); } .manual .s.no { color: var(--bad); } .manual .s.unk { color: var(--text-muted); }
+.prog .src { font-size: 11.5px; color: var(--text-muted); margin-top: 6px; }
+
+/* ---------- alert banner + settings */
+.banner {
+  margin-top: 14px; display: flex; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 14px;
+  background: color-mix(in srgb, var(--good) 14%, var(--surface-1)); border: 1px solid color-mix(in srgb, var(--good) 45%, transparent);
+}
+.banner.test { background: color-mix(in srgb, var(--accent) 12%, var(--surface-1)); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.banner .big { font-size: 26px; line-height: 1; }
+.banner .txt { flex: 1; min-width: 0; }
+.banner .txt b { display: block; font-size: 15px; }
+.banner .txt span { font-size: 13.5px; color: var(--text-secondary); }
+button.ghost { background: transparent; border: 1px solid var(--border); color: var(--text-primary); border-radius: 8px; padding: 7px 12px; font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; }
+button.ghost:disabled { opacity: .55; cursor: default; }
+.settings { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; font-size: 13px; color: var(--text-secondary); }
+.settings code { font-size: 12px; }
+
+/* ---------- analytics */
+.kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+.kpi { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.kpi .lbl { font-size: 12px; color: var(--text-secondary); }
+.kpi .val { font-size: 22px; font-weight: 650; }
+
+/* ---------- charts */
+.charts2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.chart-title { font-size: 14px; font-weight: 650; margin: 0 0 8px; }
+.chart-box { position: relative; height: 260px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+select {
+  font: inherit; font-size: 14px; padding: 7px 9px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface-1); color: var(--text-primary); max-width: 100%; min-width: 0;
+}
+
+/* ---------- segmented filter */
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--border); border-radius: 9px; overflow: hidden; background: var(--surface-1); }
+.seg button { background: transparent; border: 0; padding: 6px 12px; font: inherit; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text-primary); font-weight: 650; box-shadow: inset 0 -2px 0 var(--accent); }
+
+/* ---------- top 10 / show all */
+.more { display: flex; justify-content: center; margin-top: 12px; }
+.more button { font: inherit; font-size: 13.5px; padding: 7px 16px; border-radius: 9px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--surface-1); color: var(--accent); }
+.more button:hover { background: var(--surface-2); }
+.rank { font-size: 12px; font-weight: 650; color: var(--text-muted); margin-left: 6px; }
+
+/* ---------- series */
+.series-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.ep { padding: 14px 16px; }
+.ep .title { font-weight: 650; font-size: 14px; margin: 6px 0 10px; line-height: 1.35; }
+.ep .row { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 6px 0; border-top: 1px solid var(--border); min-width: 0; }
+.ep .row .ico { width: 16px; height: 16px; }
+.ep .row .pl { color: var(--text-secondary); width: 74px; flex: none; }
+.ep .row .v { margin-left: auto; text-align: right; font-variant-numeric: tabular-nums; min-width: 0; overflow-wrap: anywhere; }
+.badge {
+  display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px;
+  background: var(--surface-2); color: var(--text-secondary); border: 1px solid var(--border); white-space: nowrap;
+}
+.badge.series { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.badge.warn { color: var(--warn); }
+
+/* ---------- table */
+.table-wrap { overflow: auto; max-height: 72vh; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-1); box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: middle; border-bottom: 1px solid var(--border); }
+tbody tr:nth-child(even) td { background: var(--zebra); }
+tbody tr:hover td { background: var(--surface-2); }
+tbody tr:last-child td { border-bottom: 0; }
+th {
+  position: sticky; top: 0; z-index: 2; background: var(--surface-1); font-size: 12px; color: var(--text-secondary);
+  font-weight: 650; white-space: nowrap; box-shadow: inset 0 -1px 0 var(--border); border-bottom: 0;
+}
+th button { all: unset; cursor: pointer; }
+th button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+th[aria-sort="ascending"] button::after { content: " ▲"; font-size: 10px; }
+th[aria-sort="descending"] button::after { content: " ▼"; font-size: 10px; }
+td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.t { min-width: 240px; }
+td.t .ttl { display: flex; gap: 10px; align-items: center; }
+td.t img { width: 64px; height: 36px; object-fit: cover; border-radius: 5px; background: var(--surface-2); flex: none; }
+td.t .badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; }
+.pbadge {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 650; white-space: nowrap;
+  padding: 2px 8px 2px 6px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--pb) 35%, transparent);
+  background: color-mix(in srgb, var(--pb) 10%, transparent); color: var(--text-primary);
+}
+.pbadge .ico { width: 13px; height: 13px; color: var(--pb); }
+.pbadge.yt { --pb: var(--yt); } .pbadge.tt { --pb: var(--tt-line); } .pbadge.fb { --pb: var(--fb); } .pbadge.ig { --pb: var(--ig); } .pbadge.pin { --pb: var(--pin); }
+.part { color: var(--text-muted); font-size: 11px; }
+footer { margin-top: 30px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+/* ---------- responsive */
+@media (max-width: 860px) {
+  .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .platforms, .charts2 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .topbar .inner { flex-wrap: wrap; row-gap: 4px; padding: 8px 16px; }
+  .brand .sub { display: none; }
+  .brand img { width: 30px; height: 30px; }
+  .brand h1 { font-size: 15px; overflow: hidden; text-overflow: ellipsis; }
+  .updated { order: 3; width: 100%; text-align: left; font-size: 12px; }
+  .updated .next { display: none; }
+  button.primary { padding: 7px 12px; font-size: 13px; }
+  .status { gap: 5px; }
+  .chip { font-size: 12px; padding: 2px 9px 2px 7px; }
+  .chip .detail { display: none; }
+  .totals { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .total { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 12px 14px; }
+  .total .big { font-size: 24px; }
+  .total .chg { width: 100%; margin-top: 0; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .headline .big { font-size: 34px; }
+  .stat .val { font-size: 18px; }
+  .chart-box { height: 220px; }
+  .card { padding: 14px; }
+  .pcard { padding-top: 18px; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-youtube" viewBox="0 0 24 24"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="currentColor"/><path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/></symbol>
+  <symbol id="i-tiktok" viewBox="0 0 24 24"><path fill="currentColor" d="M14.2 2.5h3.1c.2 2.3 1.6 3.9 4 4.1v3.2c-1.5.1-2.8-.4-4-1.2v6.6c0 3.6-2.6 6.3-6.1 6.3S5 18.9 5 15.6c0-3.6 3-6.2 6.7-5.8v3.3c-1.9-.4-3.5.8-3.5 2.6 0 1.5 1.2 2.7 2.9 2.7 1.8 0 3.1-1.2 3.1-3.4z"/></symbol>
+  <symbol id="i-facebook" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5" fill="currentColor"/><path fill="#fff" d="M13.3 21.4v-6.9h2.3l.4-2.8h-2.7V9.9c0-.8.3-1.4 1.4-1.4H16V6.1c-.3 0-1.1-.1-2.1-.1-2.1 0-3.4 1.3-3.4 3.6v2.1H8.2v2.8h2.3v6.9z"/></symbol>
+  <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></symbol>
+  <symbol id="i-pinterest" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5" fill="currentColor"/><path fill="#fff" d="M12.3 5.2c-3.8 0-5.8 2.6-5.8 5 0 1.4.5 2.6 1.6 3.1.2.1.4 0 .4-.2l.2-.8c.1-.2 0-.3-.1-.5-.3-.4-.6-1-.6-1.8 0-2.3 1.7-4.3 4.5-4.3 2.4 0 3.8 1.5 3.8 3.5 0 2.6-1.2 4.8-2.9 4.8-.9 0-1.6-.8-1.4-1.7.3-1.1.8-2.4.8-3.2 0-.7-.4-1.4-1.2-1.4-1 0-1.7 1-1.7 2.3 0 .8.3 1.4.3 1.4l-1.1 4.7c-.3 1.4 0 3.1 0 3.3h.8c.2-.3 1.2-1.6 1.5-2.9l.6-2.3c.3.6 1.2 1.1 2.1 1.1 2.8 0 4.7-2.6 4.7-6 0-2.6-2.2-5-5.5-5z"/></symbol>
+  <symbol id="i-analytics" viewBox="0 0 24 24"><path fill="currentColor" d="M4 20V10h3v10zm6.5 0V4h3v16zM17 20v-7h3v7z"/></symbol>
+</svg>
+
+<div class="topbar">
+  <div class="inner">
+    <div class="brand">
+      <img id="brandAvatar" alt="" referrerpolicy="no-referrer" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
+      <div style="min-width:0">
+        <h1>Leo Explains · Channel progress</h1>
+        <div class="sub">YouTube, TikTok, Facebook, Instagram and Pinterest · auto-refresh every 15 minutes</div>
+      </div>
+    </div>
+    <div class="updated">
+      <div>Last updated <b id="lastRefresh">—</b></div>
+      <div class="next" id="nextRefresh"></div>
+    </div>
+    <button class="primary" id="refreshBtn" type="button">Refresh now</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="status" id="status" role="status" aria-live="polite"><span class="chip info"><span class="dot"></span><span class="msg">Loading…</span></span></div>
+  <div id="alerts" role="alert" aria-live="assertive"></div>
+
+  <div class="totals" id="totals"></div>
+
+  <section>
+    <div class="sec-head"><h2>Platforms</h2><p>Latest numbers per platform, the change over the last 24 hours and 7 days, and progress toward each monetization program.</p></div>
+    <div class="platforms" id="overview"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Growth over time</h2><p>One line per platform, built from the 15-minute snapshots. Click a legend item to hide or show it.</p></div>
+    <div class="charts2">
+      <div class="card"><p class="chart-title">Followers / subscribers</p><div class="chart-box"><canvas id="chFollowers" aria-label="Followers over time per platform"></canvas></div></div>
+      <div class="card"><p class="chart-title">Views</p><div class="chart-box"><canvas id="chViews" aria-label="Views over time per platform"></canvas></div></div>
+    </div>
+    <p class="note" id="growthNote"></p>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>YouTube Analytics</h2><p>Last 28 days from YouTube Analytics (Google's data lags 2-3 days).</p></div>
+    <div class="card" id="analytics"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Single video over time</h2><p>Pick any video or post to see how its views developed.</p></div>
+    <div class="card">
+      <div class="toolbar">
+        <label for="videoSel" class="muted" style="font-size:13px">Video</label>
+        <select id="videoSel"></select>
+      </div>
+      <div class="chart-box"><canvas id="chVideo" aria-label="Views of the selected video over time"></canvas></div>
+      <p class="note" id="videoNote"></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2 id="seriesHead">Latest 12 episodes</h2><p id="seriesHint">Newest first. Totals add up views across YouTube, Shorts, TikTok, Facebook and Instagram.</p></div>
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Episode order" id="seriesSort">
+        <button type="button" data-m="latest" aria-pressed="true">Latest</button>
+        <button type="button" data-m="top" aria-pressed="false">Most viewed</button>
+      </div>
+    </div>
+    <div class="series-grid" id="series"></div>
+    <div class="more" id="seriesMore"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2 id="tableHead">Latest 12 videos and posts</h2><p id="tableHint">Click a column header to sort.</p></div>
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Platform filter" id="kindFilter">
+        <button type="button" data-k="all" aria-pressed="true">All</button>
+        <button type="button" data-k="long" aria-pressed="false">YouTube long</button>
+        <button type="button" data-k="short" aria-pressed="false">Shorts</button>
+        <button type="button" data-k="tiktok" aria-pressed="false">TikTok</button>
+        <button type="button" data-k="facebook" aria-pressed="false">Facebook</button>
+        <button type="button" data-k="instagram" aria-pressed="false">Instagram</button>
+        <button type="button" data-k="pinterest" aria-pressed="false">Pinterest</button>
+        <button type="button" data-k="comics" aria-pressed="false">Comics</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr id="thead"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="more" id="tableMore">
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Settings &amp; notifications</h2><p>When a program's thresholds are met, the dashboard shows a banner, Windows shows a desktop notification and a line is added to alerts.log (once per program).</p></div>
+    <div class="card settings">
+      <button class="ghost" id="testBtn" type="button">Test notification</button>
+      <span id="testResult"></span>
+      <span id="monInfo"></span>
+    </div>
+  </section>
+
+  <footer>Local server 127.0.0.1:8010 · snapshots stored in stats.sqlite every 15 minutes ·
+    accounts in dashboard/config.json (tiktok_handle, instagram_handle, facebook_page_url) ·
+    TikTok, Facebook and Instagram numbers are read from public pages without login (best effort).</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+"use strict";
+const NF = new Intl.NumberFormat("en-US", { useGrouping: "always", maximumFractionDigits: 0 });
+const CF = new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 });
+const PF = new Intl.NumberFormat("en-US", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const DTF = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+const DF = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
+const MDF = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" });
+const TF = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+const HF = new Intl.DateTimeFormat("en-US", { hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const safeUrl = (u) => (typeof u === "string" && /^https:\/\//.test(u)) ? u : null;
+const safeThumb = (u) => (typeof u === "string" && /^\/thumbs\/[A-Za-z0-9_.-]+\.jpg$/.test(u)) ? u : safeUrl(u);
+const has = (v) => v !== null && v !== undefined;
+const n = (v) => has(v) ? NF.format(v) : "—";
+const fmtTs = (ts) => ts ? DTF.format(new Date(ts * 1000)) : "—";
+const fmtDur = (s) => s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}` : "";
+function shortDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.getFullYear() === new Date().getFullYear() ? MDF.format(d) : DF.format(d);
+}
+function ago(ts) {
+  if (!ts) return "";
+  const s = Math.max(0, Math.round(Date.now() / 1000 - ts));
+  if (s < 60) return "just now";
+  if (s < 3600) return `${Math.round(s / 60)} min ago`;
+  if (s < 86400) return `${Math.round(s / 3600)} h ago`;
+  return `${Math.round(s / 86400)} days ago`;
+}
+// "▲ +8" / "▼ −2" / "±0"; empty string when unknown
+function chg(v) {
+  if (!has(v)) return "";
+  if (v > 0) return `<span class="up">▲ +${NF.format(v)}</span>`;
+  if (v < 0) return `<span class="down">▼ −${NF.format(-v)}</span>`;
+  return `<span>±0</span>`;
+}
+const icon = (name, cls) => `<svg class="ico ${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+
+const PLATFORMS = [
+  { k: "youtube", name: "YouTube", cls: "yt", icon: "youtube", follow: "subscribers",
+    stats: [["views", "Total views"], ["likes", "Likes"], ["videos", "Public videos"]] },
+  { k: "tiktok", name: "TikTok", cls: "tt", icon: "tiktok", follow: "followers",
+    stats: [["views", "Views (series)"], ["likes", "Likes"], ["videos", "Videos"]] },
+  { k: "facebook", name: "Facebook", cls: "fb", icon: "facebook", follow: "followers", cfg: "facebook_page_url",
+    stats: [["views", "Views (series)"], ["likes", "Reactions"], ["videos", "Posts"]] },
+  { k: "instagram", name: "Instagram", cls: "ig", icon: "instagram", follow: "followers", cfg: "instagram_handle",
+    stats: [["views", "Views (series)"], ["likes", "Likes (series)"], ["videos", "Posts"]] },
+  // Pinterest: numbers from social/pinterest/stats.json (monitor task); impressions are not views,
+  // so Pinterest stays out of the totals strip and the growth charts
+  { k: "pinterest", name: "Pinterest", cls: "pin", icon: "pinterest", follow: "impressions", own: true,
+    stats: [["pins", "Pins"], ["saves", "Saves"], ["outbound_clicks", "Outbound clicks"]] },
+];
+const MAIN = PLATFORMS.filter(p => !p.own);
+const PBY = Object.fromEntries(PLATFORMS.map(p => [p.k, p]));
+
+let S = null;
+let kindFilter = "all";
+let sortKey = "published", sortDir = -1;
+const TOP = 12;
+let showAllSeries = false, showAllRows = false, seriesMode = "latest";
+// "Show all" / "Top 10" toggle under a list; rerender() redraws the list after the click
+function moreButton(id, total, all, label, onToggle) {
+  const box = $(id);
+  if (total <= TOP) { box.innerHTML = ""; return; }
+  box.innerHTML = `<button type="button">${all ? `Show only ${TOP}` : `Show all ${NF.format(total)} ${label}`}</button>`;
+  box.firstChild.onclick = onToggle;
+}
+const charts = {};
+
+// ------------------------------------------------------------------ top bar + status
+function renderHeader() {
+  const yi = S.youtube.info || {};
+  if (safeUrl(yi.avatar)) $("brandAvatar").src = yi.avatar;
+  $("lastRefresh").textContent = S.last_refresh ? `${TF.format(new Date(S.last_refresh * 1000))} · ${ago(S.last_refresh)}` : "not yet";
+  $("lastRefresh").title = S.last_refresh ? fmtTs(S.last_refresh) : "";
+  $("nextRefresh").textContent = S.refreshing ? "Refresh in progress (takes 1–2 min)…" :
+    (S.next_refresh ? `Next auto refresh ${HF.format(new Date(S.next_refresh * 1000))}` : "");
+  const items = [["youtube", "YouTube"], ["analytics", "Analytics"], ["tiktok", "TikTok"], ["facebook", "Facebook"], ["instagram", "Instagram"], ["pinterest", "Pinterest"]];
+  const chips = items.map(([k, name]) => {
+    const st = S.status[k];
+    if (!st) return "";
+    const cls = st.ok ? "ok" : (k === "youtube" ? "err" : "info");
+    return `<span class="chip ${cls}" title="${esc(st.msg || "")}"><span class="dot"></span>
+      ${PBY[k] ? icon(PBY[k].icon, PBY[k].cls) : icon("analytics", "")}
+      <span class="msg"><b>${name}</b> ${phrase(shortStatus(k, st))}</span></span>`;
+  });
+  if (!window.Chart) chips.push('<span class="chip err"><span class="dot"></span><span class="msg">Charts unavailable (Chart.js did not load)</span></span>');
+  $("status").innerHTML = chips.join("") || '<span class="chip info"><span class="dot"></span><span class="msg">No refresh yet</span></span>';
+}
+// "ok · 21 videos" -> "ok" always visible, the count part hidden on phones
+function phrase(s) {
+  const i = s.indexOf(" · ");
+  return i < 0 ? esc(s) : `${esc(s.slice(0, i))}<span class="detail"> · ${esc(s.slice(i + 3))}</span>`;
+}
+// One short phrase per platform; the full server message stays in the tooltip.
+function shortStatus(k, st) {
+  const m = st.msg || "";
+  if (/not set/i.test(m)) return "account not set";
+  if (/missing permission/i.test(m)) return "no permission";
+  if (k === "pinterest" && !st.ok) return /not available yet/i.test(m) ? "waiting for stats · updates every few hours" : "stats unavailable";
+  if (!st.ok) return /unavailable|not available/i.test(m) ? "stats unavailable" : "error";
+  const x = m.match(/(\d+)\/(\d+) posts with stats/);
+  if (x && x[2] === "0") return "ok";
+  if (x) return /counters unavailable/i.test(m) ? `${x[1]}/${x[2]} posts read` : `ok · ${x[1]}/${x[2]} posts`;
+  const y = m.match(/(\d+) videos (?:read|with stats)/);
+  if (y) return `ok · ${y[1]} videos`;
+  const z = m.match(/(\d+) days/);
+  if (z) return `ok · ${z[1]} days`;
+  return "ok";
+}
+
+// ------------------------------------------------------------------ totals
+function renderTotals() {
+  const sum = (fn) => {
+    let tot = null, any = false;
+    for (const p of MAIN) {
+      const v = fn(S[p.k] && S[p.k].channel);
+      if (has(v)) { tot = (tot || 0) + v; any = true; }
+    }
+    return any ? tot : null;
+  };
+  const cur = (m) => (c) => c ? c.current[m] : null;
+  const d24 = (m) => (c) => c && c.delta_24h ? c.delta_24h[m] : null;
+  const d7 = (m) => (c) => c && c.delta_7d ? c.delta_7d[m] : null;
+  const reporting = MAIN.filter(p => S[p.k] && S[p.k].channel).map(p => p.name);
+  const tile = (lbl, m) => `<div class="card total">
+      <div class="lbl">${lbl}</div>
+      <div class="big">${n(sum(cur(m)))}</div>
+      <div class="chg muted">${[sum(d24(m)), sum(d7(m))].every(v => !has(v)) ? "no change data yet"
+        : `${chg(sum(d24(m))) || "—"} in 24 h · ${chg(sum(d7(m))) || "—"} in 7 days`}</div>
+    </div>`;
+  $("totals").innerHTML = tile("Total followers", "followers") + tile("Total views", "views") + tile("Total posts", "videos");
+  $("totals").title = `Sum of the latest snapshot of: ${reporting.join(", ")}. TikTok, Facebook and Instagram views count the series posts only.`;
+}
+
+// ------------------------------------------------------------------ platform cards
+function accountLink(p, d) {
+  const info = d.info || {};
+  let label, url;
+  if (p.k === "youtube") { label = info.handle || "channel"; url = info.url; }
+  else if (p.k === "facebook") { label = info.nickname ? `${info.nickname} (Page)` : "Page"; url = d.profile_url; }
+  else { label = d.handle ? "@" + d.handle : null; url = d.profile_url; }
+  if (!label && !url) return '<span class="muted">account not set</span>';
+  return safeUrl(url) ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(label || url)}</a>` : esc(label);
+}
+function platformCard(p) {
+  const d = S[p.k] || {};
+  const ch = d.channel, info = d.info || {};
+  const posts = (S.videos || []).filter(v => v.platform === p.k);
+  const avatar = p.k === "youtube" ? info.avatar : info.avatar;
+  const head = `<div class="phead">${icon(p.icon, p.cls)}
+      <div style="min-width:0"><div class="pname">${p.name}</div><div class="acct">${accountLink(p, d)}</div></div>
+      ${safeUrl(avatar) ? `<img src="${esc(avatar)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
+    </div>`;
+  if (!ch) {
+    const notSet = p.cfg && !d.profile_url && !d.handle;
+    return `<div class="card pcard ${p.cls}">${head}
+      <div class="pempty">${p.name} stats unavailable automatically${notSet ? ` — fill in <code>${p.cfg}</code> in dashboard/config.json` : ""}.
+        ${posts.length ? `<br>${posts.length} local post${posts.length > 1 ? "s" : ""} in the posts table.` : ""}</div>
+      ${monBlock(p.k)}</div>`;
+  }
+  const c = ch.current, a = ch.delta_24h || {}, w = ch.delta_7d || {};
+  const changeLine = (has(a.followers) || has(w.followers))
+    ? `${chg(a.followers) || "—"} in 24 h · ${chg(w.followers) || "—"} in 7 days`
+    : "no change data yet (first snapshot)";
+  const since = ch.partial_7d && ch.since_7d ? ch.since_7d : (ch.partial_24h && ch.since_24h ? ch.since_24h : null);
+  const stats = p.stats.map(([m, lbl]) => `<div class="stat">
+      <div class="lbl">${lbl}</div>
+      <div class="val">${n(c[m])}</div>
+      <div class="chg">${has(a[m]) ? `${chg(a[m])} in 24 h` : "&nbsp;"}</div>
+    </div>`).join("");
+  let foot = [];
+  if (since) foot.push(`Changes measured since ${TF.format(new Date(since * 1000))} (history is still short).`);
+  if (p.k === "youtube") foot.push(`${posts.length} videos on the channel incl. private/unlisted · ${n(c.comments)} comments.`);
+  if (p.k === "tiktok") foot.push(`TikTok shows no profile-wide views; views add up the ${posts.length} series posts.`);
+  if (p.k === "facebook" || p.k === "instagram") {
+    const withStats = posts.filter(v => v.stats).length;
+    foot.push(`Public page, best effort: ${withStats}/${posts.length} posts showed counters; “—” means not shown publicly.`);
+  }
+  foot.push(`${n(ch.snapshots)} snapshots.`);
+  return `<div class="card pcard ${p.cls}">${head}
+    <div class="headline"><span class="big">${n(c.followers)}</span><span class="lbl">${p.follow}</span></div>
+    <div class="chgline">${changeLine}</div>
+    <div class="stats3">${stats}</div>
+    ${monBlock(p.k)}
+    <div class="pfoot">${foot.join(" ")}</div>
+  </div>`;
+}
+// ------------------------------------------------------------------ monetization block (per platform card)
+const openProgs = new Set();   // remembers which program panels the viewer opened
+function reqHtml(r) {
+  if (r.any_of) {
+    return `<div class="req"><div class="or">One of</div><div class="anyof">${r.any_of.map((x, i) =>
+      (i ? '<div class="or">or</div>' : "") + reqHtml(x)).join("")}</div></div>`;
+  }
+  if (r.manual) {
+    const s = r.met === true ? '<span class="s yes">✓ yes</span>' : r.met === false ? '<span class="s no">✗ no</span>' : '<span class="s unk">? to confirm</span>';
+    return `<div class="manual"><span class="l">${esc(r.label)}${r.note ? ` <span class="muted">· ${esc(r.note)}</span>` : ""}</span>${s}</div>`;
+  }
+  const known = has(r.value);
+  const pct = known ? Math.max(0, Math.min(100, r.progress * 100)) : 0;
+  return `<div class="req">
+    <div class="top"><span class="l">${esc(r.label)}</span>
+      <span class="v ${r.met ? "ok" : ""}">${r.met ? "✓ " : ""}${known ? n(Math.floor(r.value)) : "unknown"} / ${n(r.target)}</span></div>
+    <div class="bar ${r.met ? "ok" : ""}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct.toFixed(0)}"
+         aria-label="${esc(r.label)}"><i style="width:${known ? pct.toFixed(2) : 0}%"></i></div>
+    ${r.note && (!known || /estimate|needs|series/.test(r.note)) ? `<div class="sub">${esc(r.note)}</div>` : ""}
+  </div>`;
+}
+function progStatus(p) {
+  if (p.status === "invite") return '<span class="pill">Invite-only</span>';
+  if (p.status === "eligible") return '<span class="pill eligible">ELIGIBLE</span>';
+  if (p.status === "thresholds") return `<span class="pill thresholds">Thresholds met${p.blockers.length ? " · blocked" : ""}</span>`;
+  return `<span class="pill ${p.blockers.length ? "blocked" : ""}">Not yet · ${p.met_count} of ${p.total} met</span>`;
+}
+function monBlock(pf) {
+  const m = S.monetization && S.monetization.platforms && S.monetization.platforms[pf];
+  if (!m) return "";
+  const nx = m.next;
+  const next = nx ? `Next: <b>${n(Math.ceil(nx.remaining))} more</b> ${esc(nx.label.toLowerCase())} for ${esc(nx.program)} (${n(nx.target)})` : "";
+  const firstActive = m.programs.find(p => !p.invite_only);
+  return `<div class="mon">
+    <div class="mon-head"><span class="t">Monetization</span><span class="next">${next}</span></div>
+    ${m.programs.map(p => {
+      const open = openProgs.has(p.id) || (!openProgs.size && firstActive && p.id === firstActive.id);
+      const src = safeUrl(p.source);
+      return `<details class="prog" data-prog="${esc(p.id)}" ${open ? "open" : ""}>
+        <summary><span class="pn" title="${esc(p.name)}">${esc(p.short)}</span>${progStatus(p)}</summary>
+        <div class="reqs">
+          ${p.requirements.map(reqHtml).join("")}
+          ${p.blockers.length ? `<div class="sub" style="color:var(--bad);margin-top:6px">Blocked by: ${esc(p.blockers.join(", "))}</div>` : ""}
+          <div class="src">${esc(p.notes || "")} ${src ? `<a href="${esc(src)}" target="_blank" rel="noopener">Official rules</a>` : ""}${p.checked_on ? ` · checked ${esc(p.checked_on)}` : ""}</div>
+        </div>
+      </details>`;
+    }).join("")}
+  </div>`;
+}
+document.addEventListener("toggle", (e) => {
+  const d = e.target;
+  if (!(d instanceof HTMLDetailsElement) || !d.dataset.prog) return;
+  if (d.open) openProgs.add(d.dataset.prog); else openProgs.delete(d.dataset.prog);
+  if (!openProgs.size) openProgs.add("__none__");   // user closed everything: keep it closed on re-render
+}, true);
+
+// ------------------------------------------------------------------ alerts banner + settings
+let testBanner = null;
+function renderAlerts() {
+  const list = (S.alerts || []).map(a => `<div class="banner">
+      <span class="big" aria-hidden="true">★</span>
+      <div class="txt"><b>${esc(a.title)}</b><span>${esc(a.message)} · ${esc(TF.format(new Date(a.ts * 1000)))}</span></div>
+      <button class="ghost" type="button" data-dismiss>Dismiss</button></div>`);
+  if (testBanner) list.unshift(`<div class="banner test"><span class="big" aria-hidden="true">✓</span>
+      <div class="txt"><b>${esc(testBanner.title)}</b><span>${esc(testBanner.text)}</span></div>
+      <button class="ghost" type="button" data-dismiss-test>Close</button></div>`);
+  $("alerts").innerHTML = list.join("");
+}
+function renderSettings() {
+  const m = S.monetization || {};
+  $("monInfo").innerHTML = `Monetization rules checked ${esc(m.checked_on || "—")} (country: ${esc(m.country || "—")}) · edit <code>dashboard/monetization.json</code> · log: <code>dashboard/alerts.log</code>`;
+}
+$("alerts").addEventListener("click", async (e) => {
+  if (e.target.closest("[data-dismiss-test]")) { testBanner = null; renderAlerts(); return; }
+  if (!e.target.closest("[data-dismiss]")) return;
+  await getJSON("/api/alerts/dismiss", { method: "POST", headers: { "X-Leo-Dashboard": "1" } }).catch(() => {});
+  await load(true);
+});
+$("testBtn").addEventListener("click", async () => {
+  const btn = $("testBtn");
+  btn.disabled = true; $("testResult").textContent = "Sending…";
+  try {
+    const r = await getJSON("/api/test_notification", { method: "POST", headers: { "X-Leo-Dashboard": "1" } });
+    const how = r.method === "toast" ? "Windows notification shown" : r.method === "balloon" ? "Windows tray balloon shown" : `desktop: ${r.method}`;
+    $("testResult").textContent = `Sent · ${how} · logged to alerts.log`;
+    testBanner = { title: r.title, text: `${r.message} (${how}).` };
+    renderAlerts();
+  } catch (e) {
+    $("testResult").textContent = `Failed: ${e.message}`;
+  }
+  setTimeout(() => { btn.disabled = false; }, 10000);
+});
+
+// Pinterest card: totals of the logged pins (stats.json); 24 h change from the snapshots when there are any
+function pinterestCard(p) {
+  const d = S.pinterest || {}, t = d.totals || {}, ch = d.channel;
+  const posts = (S.videos || []).filter(v => v.platform === "pinterest");
+  const a = (ch && ch.delta_24h) || {};
+  const head = `<div class="phead">${icon(p.icon, p.cls)}
+      <div style="min-width:0"><div class="pname">${p.name}</div><div class="acct">${accountLink(p, d)}</div></div></div>`;
+  const delta = { pins: a.videos, saves: a.likes };
+  const stats = p.stats.map(([m, lbl]) => `<div class="stat">
+      <div class="lbl">${lbl}</div>
+      <div class="val">${n(t[m])}</div>
+      <div class="chg">${has(delta[m]) ? `${chg(delta[m])} in 24 h` : "&nbsp;"}</div>
+    </div>`).join("");
+  const upd = d.stats_updated && !isNaN(new Date(d.stats_updated)) ? TF.format(new Date(d.stats_updated)) : "—";
+  const foot = d.stats_file
+    ? `Analytics from Pinterest (stats.json, updated ${esc(upd)}): ${n(t.with_stats)}/${n(t.pins)} pins with numbers${has(t.pin_clicks) ? ` · ${n(t.pin_clicks)} pin clicks` : ""}. In the table, Views = impressions and Likes = saves.`
+    : "Pinterest stats update every few hours (the monitor task reads Pinterest analytics); “—” until the first update.";
+  return `<div class="card pcard ${p.cls}">${head}
+    <div class="headline"><span class="big">${n(t.impressions)}</span><span class="lbl">${p.follow}</span></div>
+    <div class="chgline">${has(a.views) ? `${chg(a.views) || "—"} in 24 h` : (d.stats_file ? "no change data yet (first snapshot)" : "no stats yet")}</div>
+    <div class="stats3">${stats}</div>
+    <div class="pfoot">${foot}</div>
+  </div>`;
+}
+function renderOverview() {
+  $("overview").innerHTML = PLATFORMS.map(p => p.k === "pinterest" ? pinterestCard(p) : platformCard(p)).join("");
+}
+
+// ------------------------------------------------------------------ charts (shared)
+function colors() {
+  const cs = getComputedStyle(document.documentElement);
+  const g = (v) => cs.getPropertyValue(v).trim();
+  return { grid: g("--grid"), text: g("--text-secondary"), muted: g("--text-muted"), surface: g("--surface-1"),
+           primary: g("--text-primary"), border: g("--border"),
+           youtube: g("--yt"), tiktok: g("--tt-line"), facebook: g("--fb"), instagram: g("--ig"), pinterest: g("--pin") };
+}
+function destroy(k) { if (charts[k]) { charts[k].destroy(); delete charts[k]; } }
+function baseOptions(c, { legend = false, xTitle = "", yTitle = "", category = false, tooltip = {} } = {}) {
+  const axisTitle = (t) => ({ display: !!t, text: t, color: c.muted, font: { size: 12, weight: "600" } });
+  return {
+    responsive: true, maintainAspectRatio: false, animation: false,
+    interaction: { mode: category ? "index" : "nearest", axis: "x", intersect: false },
+    plugins: {
+      legend: { display: legend, position: "top", align: "start",
+                labels: { color: c.text, usePointStyle: true, pointStyle: "circle", boxWidth: 8, boxHeight: 8, padding: 16, font: { size: 12 } } },
+      tooltip: Object.assign({ backgroundColor: c.surface, titleColor: c.primary, bodyColor: c.text, borderColor: c.border,
+                               borderWidth: 1, padding: 10, boxPadding: 4, usePointStyle: true }, tooltip)
+    },
+    scales: {
+      x: category
+        ? { grid: { display: false }, ticks: { color: c.muted, maxRotation: 0, autoSkipPadding: 12 }, title: axisTitle(xTitle) }
+        : { type: "linear", grid: { display: false }, ticks: { color: c.muted, maxRotation: 0, autoSkipPadding: 16, maxTicksLimit: 6 }, title: axisTitle(xTitle) },
+      y: { beginAtZero: true, grid: { color: c.grid }, border: { display: false },
+           ticks: { color: c.muted, precision: 0, callback: (v) => v >= 10000 ? CF.format(v) : NF.format(v) }, title: axisTitle(yTitle) }
+    }
+  };
+}
+function timeAxis(opts, allX) {
+  if (!allX.length) return;
+  let min = Math.min(...allX), max = Math.max(...allX);
+  if (max - min < 2 * 3600e3) { const mid = (min + max) / 2; min = mid - 3600e3; max = mid + 3600e3; }
+  const span = max - min;
+  const fmt = span > 3 * 86400e3 ? MDF : (span > 20 * 3600e3 ? TF : HF);
+  Object.assign(opts.scales.x, { min, max });
+  opts.scales.x.ticks.callback = (v) => fmt.format(new Date(v));
+  opts.scales.x.title.text = span > 20 * 3600e3 ? "Date" : "Time (today)";
+}
+function lineDataset(label, color, pts, c) {
+  return { label, data: pts, borderColor: color, backgroundColor: color, borderWidth: 2,
+           pointRadius: pts.length > 12 ? 0 : 3, pointHoverRadius: 5, pointHitRadius: 10, pointBorderColor: c.surface, pointBorderWidth: 1.5,
+           tension: 0 };
+}
+
+// ------------------------------------------------------------------ growth (all platforms)
+async function renderGrowth() {
+  if (!window.Chart) return;
+  const hist = await Promise.all(MAIN.map(p => getJSON(`/api/history?platform=${p.k}`).catch(() => [])));
+  const c = colors();
+  const build = (key, canvas, field, yTitle) => {
+    destroy(key);
+    const datasets = [], allX = [];
+    MAIN.forEach((p, i) => {
+      const pts = hist[i].filter(r => has(r[field])).map(r => ({ x: r.ts * 1000, y: r[field] }));
+      if (!pts.length) return;
+      pts.forEach(q => allX.push(q.x));
+      datasets.push(lineDataset(p.name, c[p.k], pts, c));
+    });
+    const opts = baseOptions(c, { legend: true, xTitle: "Time", yTitle, tooltip: { callbacks: {
+      title: (items) => DTF.format(new Date(items[0].parsed.x)),
+      label: (it) => ` ${it.dataset.label}: ${NF.format(it.parsed.y)}` } } });
+    timeAxis(opts, allX);
+    charts[key] = new Chart(canvas, { type: "line", data: { datasets }, options: opts });
+    return datasets.length;
+  };
+  build("fol", $("chFollowers"), "followers", "Followers");
+  build("views", $("chViews"), "views", "Views");
+  const counts = hist.map(h => h.length);
+  const missing = MAIN.filter((p, i) => !counts[i]).map(p => p.name);
+  $("growthNote").textContent = (Math.max(...counts) < 6 ? "Charts fill in as snapshots accumulate (one every 15 minutes). " : "")
+    + (missing.length ? `No data yet for ${missing.join(", ")}.` : "")
+    + " Views: YouTube is the channel total; TikTok, Facebook and Instagram add up the series posts.";
+}
+
+// ------------------------------------------------------------------ analytics
+function renderAnalytics() {
+  const a = S.analytics;
+  const el = $("analytics");
+  destroy("an");
+  if (!a.available) {
+    el.innerHTML = `<div class="empty">${esc(a.note || "Analytics not available yet.")}</div>`;
+    return;
+  }
+  const t = a.totals || {};
+  const k = (lbl, val) => `<div class="kpi"><div class="lbl">${lbl}</div><div class="val">${val}</div></div>`;
+  el.innerHTML = `<div class="kpis">
+      ${k("Views", n(t.views))}${k("Minutes watched", n(t.minutes))}${k("Avg. view duration", t.avg_dur ? fmtDur(t.avg_dur) : "—")}
+      ${k("Subscribers gained", n(t.subs_gained))}${k("Subscribers lost", n(t.subs_lost))}
+    </div>
+    <p class="chart-title">Views per day</p>
+    <div class="chart-box"><canvas id="chAn" aria-label="YouTube views per day"></canvas></div>
+    ${a.note ? `<p class="note">${esc(a.note)}</p>` : ""}`;
+  if (!window.Chart) return;
+  const c = colors();
+  const opts = baseOptions(c, { category: true, xTitle: "Day", yTitle: "Views", tooltip: { displayColors: false, callbacks: {
+    title: (items) => DF.format(new Date(a.rows[items[0].dataIndex].day + "T00:00:00")),
+    label: (it) => { const r = a.rows[it.dataIndex];
+      return [`Views: ${n(r.views)}`, `Minutes watched: ${n(r.minutes)}`, `Subscribers: +${n(r.subs_gained)} / −${n(r.subs_lost)}`]; } } } });
+  charts.an = new Chart($("chAn"), {
+    type: "bar",
+    data: { labels: a.rows.map(r => MDF.format(new Date(r.day + "T00:00:00"))),
+            datasets: [{ label: "Views", data: a.rows.map(r => r.views), backgroundColor: c.youtube,
+                         borderRadius: 4, maxBarThickness: 22, borderSkipped: "bottom" }] },
+    options: opts
+  });
+}
+
+// ------------------------------------------------------------------ single video
+const KIND = { long: "YouTube · long", short: "YouTube · Short", community: "YouTube · post", tiktok: "TikTok", facebook: "Facebook", instagram: "Instagram", pinterest: "Pinterest" };
+function fillVideoSelect() {
+  const sel = $("videoSel");
+  const prev = sel.value;
+  const groups = [["long", "YouTube · long videos"], ["short", "YouTube · Shorts"], ["tiktok", "TikTok"], ["facebook", "Facebook"], ["instagram", "Instagram"], ["pinterest", "Pinterest (impressions)"]];
+  sel.innerHTML = groups.map(([k, lbl]) => {
+    const vs = S.videos.filter(v => v.kind === k && v.stats);
+    if (!vs.length) return "";
+    return `<optgroup label="${esc(lbl)}">` + vs.map(v =>
+      `<option value="${esc(v.platform + "|" + v.id)}">${esc((v.series ? v.series + " · " : "") + v.title)}</option>`).join("") + "</optgroup>";
+  }).join("");
+  if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
+  else {
+    const first = S.videos.filter(v => v.stats && v.series && has(v.views))
+      .sort((a, b) => (b.views || 0) - (a.views || 0))[0];
+    if (first) sel.value = first.platform + "|" + first.id;
+  }
+}
+async function renderVideoChart() {
+  const val = $("videoSel").value;
+  destroy("vid");
+  if (!val) { $("videoNote").textContent = "No video with stats yet."; return; }
+  const [pf, id] = val.split("|");
+  const rows = await getJSON(`/api/video_history?platform=${encodeURIComponent(pf)}&id=${encodeURIComponent(id)}`).catch(() => []);
+  const v = S.videos.find(x => x.platform === pf && x.id === id) || {};
+  if (window.Chart) {
+    const c = colors();
+    const pts = rows.filter(r => has(r.views)).map(r => ({ x: r.ts * 1000, y: r.views }));
+    const opts = baseOptions(c, { xTitle: "Time", yTitle: "Views", tooltip: { callbacks: {
+      title: (items) => DTF.format(new Date(items[0].parsed.x)), label: (it) => ` Views: ${NF.format(it.parsed.y)}` } } });
+    timeAxis(opts, pts.map(p => p.x));
+    charts.vid = new Chart($("chVideo"), { type: "line", data: { datasets: [lineDataset("Views", c[pf] || c.youtube, pts, c)] }, options: opts });
+  }
+  const url = safeUrl(v.url);
+  $("videoNote").innerHTML = `${KIND[v.kind] || ""} · ${n(v.views)} views · ${n(v.likes)} likes · ${n(v.comments)} comments` +
+    (has(v.views_24h) ? ` · ${chg(v.views_24h)} views in 24 h` : "") +
+    (url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">open</a>` : "") +
+    (rows.length < 3 ? ` · ${NF.format(rows.length)} snapshot${rows.length === 1 ? "" : "s"} so far` : "");
+}
+
+// ------------------------------------------------------------------ series
+function renderSeries() {
+  const link = (o, txt) => o && safeUrl(o.url) ? `<a href="${esc(o.url)}" target="_blank" rel="noopener">${txt}</a>` : txt;
+  const plural = (v, w) => `${n(v)} ${w}${v === 1 ? "" : "s"}`;
+  const views = (o) => has(o.views) ? plural(o.views, "view") : (has(o.likes) ? plural(o.likes, "like") : "posted");
+  const none = (t) => `<span class="muted">${t}</span>`;
+  const row = (ic, cls, label, val) => `<div class="row">${icon(ic, cls)}<span class="pl">${label}</span><span class="v">${val}</span></div>`;
+  // total reach of an episode: views where a platform reports them, likes otherwise (Facebook/Instagram)
+  const reach = (s) => [s.long, s.short, s.tiktok && s.tiktok.posted ? s.tiktok : null, ...(s.facebook || []), ...(s.instagram || [])]
+    .reduce((t, o) => t + (o ? (has(o.views) ? o.views : (has(o.likes) ? o.likes : 0)) : 0), 0);
+  const epNum = (s) => parseInt(String(s.series).replace(/\D/g, ""), 10) || 0;
+  // episodes still in production (nothing posted yet) only show up under "Show all"
+  const live = (s) => s.long || s.short || (s.tiktok && s.tiktok.posted) || (s.facebook || []).length || (s.instagram || []).length;
+  const ranked = S.series.filter(s => showAllSeries || live(s)).map(s => ({ s, r: reach(s) }))
+    .sort(seriesMode === "top" ? (a, b) => b.r - a.r : (a, b) => epNum(b.s) - epNum(a.s));
+  const shown = showAllSeries ? ranked : ranked.slice(0, TOP);
+  const word = seriesMode === "top" ? "Most viewed" : "Latest";
+  $("seriesHead").textContent = showAllSeries ? `All ${NF.format(ranked.length)} episodes` : `${word} ${Math.min(TOP, ranked.length)} episodes`;
+  $("seriesHint").textContent = seriesMode === "top"
+    ? "Ranked by total views across YouTube, Shorts, TikTok, Facebook and Instagram."
+    : "Newest first. Totals add up views across YouTube, Shorts, TikTok, Facebook and Instagram.";
+  document.querySelectorAll("#seriesSort button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.m === seriesMode)));
+  moreButton("seriesMore", S.series.length, showAllSeries, "episodes", () => { showAllSeries = !showAllSeries; renderSeries(); });
+  $("series").innerHTML = shown.map(({ s, r }, i) => {
+    const kindOf = (p) => /\/reels?\//.test(p.url || "") ? "Reel"
+      : /instagram\.com\/(?:[^/]+\/)?p\//.test(p.url || "") ? "Carousel" : (p.kind === "reel" ? "Reel" : "Post");
+    const social = (arr) => arr && arr.length ? arr.map(p => link(p, `${kindOf(p)}: ${views(p)}`)).join(" · ") : none("not posted");
+    return `<div class="card ep">
+      <span class="badge series">${esc(s.series)}</span><span class="rank">${seriesMode === "top" ? `#${i + 1} · ` : ""}${plural(r, "view")} total</span>
+      <div class="title">${esc(s.title)}</div>
+      ${row("youtube", "yt", "Long video", s.long ? link(s.long, views(s.long)) : none("not uploaded"))}
+      ${row("youtube", "yt", "Short", s.short ? link(s.short, views(s.short)) : none("not uploaded"))}
+      ${row("tiktok", "tt", "TikTok", s.tiktok && s.tiktok.posted ? link(s.tiktok, views(s.tiktok)) : none("not posted"))}
+      ${row("facebook", "fb", "Facebook", social(s.facebook))}
+      ${row("instagram", "ig", "Instagram", social(s.instagram))}
+    </div>`;
+  }).join("") || '<div class="empty">No local episodes found.</div>';
+}
+
+// ------------------------------------------------------------------ table
+const COLS = [
+  { k: "title", l: "Title" },
+  { k: "kind", l: "Platform" },
+  { k: "published", l: "Published" },
+  { k: "views", l: "Views", num: true },
+  { k: "likes", l: "Likes", num: true },
+  { k: "comments", l: "Comments", num: true },
+  { k: "like_rate", l: "Like rate", num: true },
+  { k: "views_24h", l: "Views 24 h", num: true },
+  { k: "url", l: "Link", nosort: true },
+];
+const PRIV = { private: "private", unlisted: "unlisted" };
+function renderTable() {
+  $("thead").innerHTML = COLS.map(c => {
+    const sort = c.k === sortKey ? (sortDir > 0 ? "ascending" : "descending") : "none";
+    return `<th scope="col" class="${c.num ? "num" : ""}" ${c.nosort ? "" : `aria-sort="${sort}"`}>${c.nosort ? c.l : `<button type="button" data-sort="${c.k}">${c.l}</button>`}</th>`;
+  }).join("");
+  let rows = S.videos.filter(v => kindFilter === "all" || v.kind === kindFilter
+    || (kindFilter === "comics" && String(v.format || "").startsWith("comic")));
+  const pinNote = rows.some(v => v.platform === "pinterest")
+    ? ` Pinterest: Views = impressions, Likes = saves${S.pinterest && S.pinterest.stats_file ? "" : " · Pinterest stats update every few hours"}.` : "";
+  rows = rows.slice().sort((a, b) => {
+    const x = a[sortKey], y = b[sortKey];
+    if (!has(x)) return 1;
+    if (!has(y)) return -1;
+    return (typeof x === "string" ? x.localeCompare(y, "en") : x - y) * sortDir;
+  });
+  const total = rows.length;
+  if (!showAllRows) rows = rows.slice(0, TOP);
+  $("tableHead").textContent = showAllRows ? "All videos and posts"
+    : `${sortKey === "published" && sortDir < 0 ? "Latest" : "Top"} ${Math.min(TOP, total)} videos and posts`;
+  $("tableHint").textContent = `${showAllRows ? "" : `Showing ${NF.format(rows.length)} of `}${NF.format(total)} items · sorted by ${(COLS.find(c => c.k === sortKey) || {}).l || sortKey} · click a column header to sort.${pinNote}`;
+  moreButton("tableMore", total, showAllRows, "items", () => { showAllRows = !showAllRows; renderTable(); });
+  $("tbody").innerHTML = rows.map(v => {
+    const p = PBY[v.platform] || PLATFORMS[0];
+    const url = safeUrl(v.url), thumb = safeThumb(v.thumb);
+    const badges = [
+      v.series ? `<span class="badge series">${esc(v.series)}</span>` : "",
+      PRIV[v.privacy] ? `<span class="badge warn">${PRIV[v.privacy]}</span>` : "",
+      v.duration ? `<span class="badge">${fmtDur(v.duration)}</span>` : "",
+      v.format ? `<span class="badge">${esc(v.format)}</span>` : "",
+      v.subtype ? `<span class="badge">${esc(v.subtype)}</span>` : "",
+      v.platform === "pinterest" ? (v.stats
+        ? `<span class="badge" title="${esc(`Pin clicks ${n(v.pin_clicks)} · outbound clicks ${n(v.outbound_clicks)}${v.board ? ` · board: ${v.board}` : ""}`)}">outbound clicks ${n(v.outbound_clicks)}</span>`
+        : `<span class="badge" title="Pinterest stats update every few hours">stats every few hours</span>`)
+      : ((v.platform !== "youtube" || v.kind === "community") && !v.stats ? `<span class="badge">stats unavailable</span>` : ""),
+    ].join("");
+    const v24 = !has(v.views_24h) ? '<span class="muted">—</span>'
+      : (chg(v.views_24h) + (v.partial_24h ? ' <span class="part" title="history shorter than 24 h">*</span>' : ""));
+    return `<tr>
+      <td class="t"><div class="ttl">${thumb ? `<img src="${esc(thumb)}" alt="" referrerpolicy="no-referrer" decoding="async" onerror="this.style.visibility='hidden'">` : `<img alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">`}
+        <div><div>${esc(v.title)}</div><div class="badges">${badges}</div></div></div></td>
+      <td><span class="pbadge ${p.cls}">${icon(p.icon, "")}${esc(KIND[v.kind] || v.kind)}</span></td>
+      <td class="num" title="${v.published ? esc(DF.format(new Date(v.published))) : ""}">${shortDate(v.published)}${v.published_estimated ? ' <span class="part" title="local file date">≈</span>' : ""}</td>
+      <td class="num"${v.platform === "pinterest" ? ' title="impressions"' : ""}>${n(v.views)}</td>
+      <td class="num"${v.platform === "pinterest" ? ' title="saves"' : ""}>${n(v.likes)}</td>
+      <td class="num">${n(v.comments)}</td>
+      <td class="num">${has(v.like_rate) ? PF.format(v.like_rate) : '<span class="muted">—</span>'}</td>
+      <td class="num">${v24}</td>
+      <td>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">open</a>` : '<span class="muted">—</span>'}</td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="${COLS.length}" class="empty">No items.</td></tr>`;
+}
+
+// ------------------------------------------------------------------ data flow
+async function getJSON(url, opts) {
+  const r = await fetch(url, Object.assign({ cache: "no-store" }, opts));
+  const body = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error(body.error || `HTTP ${r.status}`); e.body = body; e.status = r.status; throw e; }
+  return body;
+}
+let lastSeenRefresh = null, loadedAt = Date.now(), waitUntil = 0, pollTimer = null;
+async function load(force) {
+  try {
+    S = await getJSON("/api/summary");
+    loadedAt = Date.now();
+  } catch (e) {
+    $("status").innerHTML = `<span class="chip err"><span class="dot"></span><span class="msg">Local server not responding: ${esc(e.message)}</span></span>`;
+    return;
+  }
+  renderHeader();
+  renderAlerts();
+  updateButton();
+  clearTimeout(pollTimer);   // a refresh takes ~1-2 min: check back every 5 s until it ends
+  if (S.refreshing) pollTimer = setTimeout(() => load(false), 5000);
+  if (!force && S.last_refresh === lastSeenRefresh) return;
+  renderSettings();
+  lastSeenRefresh = S.last_refresh;
+  renderTotals();
+  renderOverview();
+  renderAnalytics();
+  renderSeries();
+  renderTable();
+  fillVideoSelect();
+  renderGrowth();
+  renderVideoChart();
+}
+function updateButton() {
+  const btn = $("refreshBtn");
+  const left = Math.max(Math.ceil((waitUntil - Date.now()) / 1000), S ? S.manual_wait - Math.round((Date.now() - loadedAt) / 1000) : 0);
+  if (S && S.refreshing) { btn.disabled = true; btn.textContent = "Refreshing…"; }
+  else if (left > 0) { btn.disabled = true; btn.textContent = `Refresh now (${left} s)`; }
+  else { btn.disabled = false; btn.textContent = "Refresh now"; }
+}
+$("refreshBtn").addEventListener("click", async () => {
+  const btn = $("refreshBtn");
+  btn.disabled = true; btn.textContent = "Refreshing…";
+  try {
+    await getJSON("/api/refresh", { method: "POST" });
+    waitUntil = Date.now() + 60000;
+  } catch (e) {
+    if (e.body && e.body.retry_after) waitUntil = Date.now() + e.body.retry_after * 1000;
+  }
+  await load(true);
+});
+setInterval(updateButton, 1000);
+setInterval(() => load(false), 60000);   // picks up the 15-minute auto refresh
+
+$("seriesSort").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-m]");
+  if (!b || b.dataset.m === seriesMode) return;
+  seriesMode = b.dataset.m;
+  renderSeries();
+});
+$("videoSel").addEventListener("change", renderVideoChart);
+$("kindFilter").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-k]"); if (!b) return;
+  kindFilter = b.dataset.k;
+  document.querySelectorAll("#kindFilter button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  renderTable();
+});
+$("thead").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-sort]"); if (!b) return;
+  const k = b.dataset.sort;
+  if (k === sortKey) sortDir = -sortDir; else { sortKey = k; sortDir = (k === "title" || k === "kind") ? 1 : -1; }
+  renderTable();
+});
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (S) { renderAnalytics(); renderGrowth(); renderVideoChart(); } });
+
+load(true);
+</script>
+</body>
+</html>
